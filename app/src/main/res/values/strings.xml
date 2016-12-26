@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">App Pedidos</string>
+
+    <string name="username">DNI</string>
+    <string name="password">Contraseña</string>
+    <string name="login">Login</string>
+</resources>
