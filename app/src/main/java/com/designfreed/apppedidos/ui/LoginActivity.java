@@ -66,7 +66,7 @@ public class LoginActivity extends AppCompatActivity {
             String username = strings[0];
             String password = strings[1];
 
-            StringBuilder urlService = new StringBuilder("http://10.0.2.2:8080/PedidosAPI/services/pedidosService/login?");
+            StringBuilder urlService = new StringBuilder("http://192.168.0.3:8080/PedidosAPI/services/pedidosService/login?");
 
             urlService.append("username=" + username);
             urlService.append("&");

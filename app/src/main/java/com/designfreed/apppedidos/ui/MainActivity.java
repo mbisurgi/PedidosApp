@@ -1,9 +1,12 @@
 package com.designfreed.apppedidos.ui;
 
+import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.designfreed.apppedidos.R;
@@ -22,10 +25,12 @@ import java.net.URL;
 
 public class MainActivity extends AppCompatActivity {
     private TextView txtChofer;
+    private ImageButton btnVoleos;
 
     private CrmDbHelper dbHelper;
     private SQLiteDatabase db;
     private Chofer chofer;
+    private HojaRuta hoja;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,7 +44,17 @@ public class MainActivity extends AppCompatActivity {
 
         txtChofer = (TextView) findViewById(R.id.chofer);
         txtChofer.setText(chofer.getNombre() + " " + chofer.getApellido());
-        //txtChofer.setText("Maximiliano Bisurgi");
+
+        btnVoleos = (ImageButton) findViewById(R.id.voleos);
+        btnVoleos.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getApplicationContext(), PedidoActivity.class);
+                intent.putExtra("hoja", hoja);
+
+                startActivity(intent);
+            }
+        });
 
         new DownloadHojaRutaTask().execute(chofer);
     }
@@ -49,7 +64,7 @@ public class MainActivity extends AppCompatActivity {
         protected Boolean doInBackground(Chofer... choferes) {
             Boolean estado = false;
 
-            StringBuilder urlService = new StringBuilder("http://10.0.2.2:8080/PedidosAPI/services/pedidosService/getHojaRuta?");
+            StringBuilder urlService = new StringBuilder("http://192.168.0.3:8080/PedidosAPI/services/pedidosService/getHojaRuta?");
 
             String fechaString = "19/12/2016";
             //Date fecha = Calendar.getInstance().getTime();
@@ -60,7 +75,9 @@ public class MainActivity extends AppCompatActivity {
 
             HojaRutaRepository hojaRutaRepository = new HojaRutaRepository(getApplicationContext());
 
-            if (hojaRutaRepository.getHojaRuta(fechaString, chofer.getId()) != null) {
+            hoja = hojaRutaRepository.getHojaRuta(fechaString, chofer.getId());
+
+            if (hoja != null) {
                 return false;
             }
 
@@ -68,7 +85,7 @@ public class MainActivity extends AppCompatActivity {
 
             HttpURLConnection httpURLConnection = null;
 
-            HojaRuta hoja = null;
+            //HojaRuta hoja = null;
 
             try {
                 URL url = new URL(urlService.toString());
