@@ -19,9 +19,6 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
 
 public class MainActivity extends AppCompatActivity {
     private TextView txtChofer;
@@ -54,13 +51,18 @@ public class MainActivity extends AppCompatActivity {
 
             StringBuilder urlService = new StringBuilder("http://10.0.2.2:8080/PedidosAPI/services/pedidosService/getHojaRuta?");
 
-            Date fecha = Calendar.getInstance().getTime();
+            String fechaString = "19/12/2016";
+            //Date fecha = Calendar.getInstance().getTime();
 
-            SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
-
-            urlService.append("fecha=" + formatter.format(fecha));
+            urlService.append("fecha=" + fechaString);
             urlService.append("&");
             urlService.append("choferId=" + choferes[0].getId());
+
+            HojaRutaRepository hojaRutaRepository = new HojaRutaRepository(getApplicationContext());
+
+            if (hojaRutaRepository.getHojaRuta(fechaString, chofer.getId()) != null) {
+                return false;
+            }
 
             String json = "";
 
@@ -82,13 +84,9 @@ public class MainActivity extends AppCompatActivity {
                     hoja = PedidoService.getHojaRuta(json);
 
                     if (hoja != null) {
-                        HojaRutaRepository hojaRutaRepository = new HojaRutaRepository(getApplicationContext());
+                        hojaRutaRepository.insertHojaRuta(hoja);
 
-                        if (hojaRutaRepository.getHojaRuta(hoja) == null) {
-                            hojaRutaRepository.insertHojaRuta(hoja);
-
-                            estado = true;
-                        }
+                        estado = true;
                     }
                 }
             } catch (MalformedURLException e) {

@@ -5,8 +5,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.Charset;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class Utils {
+    private static SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+
     public static String readFromStream(InputStream inputStream) throws IOException {
         StringBuilder output = new StringBuilder();
 
@@ -22,5 +27,13 @@ public class Utils {
         }
 
         return output.toString();
+    }
+
+    public static String dateToString(Date fecha) {
+        return formatter.format(fecha);
+    }
+
+    public static Date stringToDate(String fecha) throws ParseException {
+        return formatter.parse(fecha);
     }
 }
