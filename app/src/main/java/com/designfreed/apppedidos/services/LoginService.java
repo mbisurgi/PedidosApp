@@ -6,17 +6,17 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class LoginService {
-    public static Chofer getChofer(String json) {
+    public static Chofer jsonToChofer(String json) {
         Chofer cho = new Chofer();
 
         try {
             JSONObject jsonChofer = new JSONObject(json);
 
-            Long id = jsonChofer.getLong("id");
+            Long choferId = jsonChofer.getLong("id");
             String nombre = jsonChofer.getString("nombre");
             String apellido = jsonChofer.getString("apellido");
 
-            cho.setId(id);
+            cho.setChoferId(choferId);
             cho.setNombre(nombre);
             cho.setApellido(apellido);
         } catch (JSONException e) {

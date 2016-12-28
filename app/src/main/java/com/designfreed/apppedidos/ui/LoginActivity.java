@@ -13,6 +13,7 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.activeandroid.ActiveAndroid;
 import com.designfreed.apppedidos.R;
 import com.designfreed.apppedidos.entities.Chofer;
 import com.designfreed.apppedidos.services.LoginService;

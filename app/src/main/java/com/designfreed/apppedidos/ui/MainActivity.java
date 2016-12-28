@@ -11,9 +11,10 @@ import android.widget.TextView;
 
 import com.designfreed.apppedidos.R;
 import com.designfreed.apppedidos.bd.CrmDbHelper;
-import com.designfreed.apppedidos.bd.HojaRutaRepository;
+import com.designfreed.apppedidos.bd.HojaRutaRepositoryDb;
 import com.designfreed.apppedidos.entities.Chofer;
 import com.designfreed.apppedidos.entities.HojaRuta;
+import com.designfreed.apppedidos.repositories.HojaRutaRepository;
 import com.designfreed.apppedidos.services.PedidoService;
 import com.designfreed.apppedidos.utils.Utils;
 
@@ -37,8 +38,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        dbHelper = CrmDbHelper.getInstance(this);
-        db = dbHelper.getReadableDatabase();
+        //dbHelper = CrmDbHelper.getInstance(this);
+        //db = dbHelper.getReadableDatabase();
 
         chofer = (Chofer) getIntent().getSerializableExtra("chofer");
 
@@ -71,11 +72,15 @@ public class MainActivity extends AppCompatActivity {
 
             urlService.append("fecha=" + fechaString);
             urlService.append("&");
-            urlService.append("choferId=" + choferes[0].getId());
+            urlService.append("choferId=" + choferes[0].getChoferId());
 
-            HojaRutaRepository hojaRutaRepository = new HojaRutaRepository(getApplicationContext());
+            HojaRutaRepository hojaRutaRepository = new HojaRutaRepository();
 
-            hoja = hojaRutaRepository.getHojaRuta(fechaString, chofer.getId());
+            //HojaRutaRepositoryDb hojaRutaRepositoryDb = new HojaRutaRepositoryDb(getApplicationContext());
+
+            //hoja = hojaRutaRepositoryDb.getHojaRuta(fechaString, chofer.getId());
+            //hoja = hojaRutaRepository.getByIdCrm(1L);
+            //hoja = HojaRuta.findById(HojaRuta.class, 1L);
 
             if (hoja != null) {
                 return false;
@@ -85,7 +90,7 @@ public class MainActivity extends AppCompatActivity {
 
             HttpURLConnection httpURLConnection = null;
 
-            //HojaRuta hoja = null;
+            //HojasRuta hoja = null;
 
             try {
                 URL url = new URL(urlService.toString());
@@ -101,7 +106,8 @@ public class MainActivity extends AppCompatActivity {
                     hoja = PedidoService.getHojaRuta(json);
 
                     if (hoja != null) {
-                        hojaRutaRepository.insertHojaRuta(hoja);
+                        //hojaRutaRepositoryDb.insertHojaRuta(hoja);
+                        Long i = hoja.save();
 
                         estado = true;
                     }

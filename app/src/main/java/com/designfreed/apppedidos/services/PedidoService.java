@@ -1,6 +1,7 @@
 package com.designfreed.apppedidos.services;
 
 import com.designfreed.apppedidos.entities.HojaRuta;
+import com.designfreed.apppedidos.repositories.HojaRutaRepository;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -11,7 +12,9 @@ import java.util.Calendar;
 import java.util.Date;
 
 public class PedidoService {
-    public static HojaRuta getHojaRuta(String json) {
+    HojaRutaRepository hojaRutaRepository = new HojaRutaRepository();
+
+    public static HojaRuta jsonToHojaRuta(String json) {
         HojaRuta hoja = new HojaRuta();
 
         try {
@@ -19,12 +22,12 @@ public class PedidoService {
 
             JSONObject jsonChofer = jsonHojaRuta.getJSONObject("chofer");
 
-            Long id = jsonHojaRuta.getLong("id");
+            Long hojaRutaId = jsonHojaRuta.getLong("id");
             Date fecha = new Date(jsonHojaRuta.getLong("fecha"));
             Long choferId = jsonChofer.getLong("id");
             Boolean estado = jsonHojaRuta.getBoolean("estado");
 
-            hoja.setId(id);
+            hoja.sethojaRutaId(hojaRutaId);
             hoja.setFecha(fecha);
             hoja.setChoferId(choferId);
             hoja.setEstado(estado);

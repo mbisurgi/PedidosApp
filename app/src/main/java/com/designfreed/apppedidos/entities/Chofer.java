@@ -1,27 +1,35 @@
 package com.designfreed.apppedidos.entities;
 
+import com.activeandroid.Model;
+import com.activeandroid.annotation.Column;
+import com.activeandroid.annotation.Table;
+
 import java.io.Serializable;
 
-public class Chofer implements Serializable {
-    private Long id;
+@Table(name = "choferes")
+public class Chofer extends Model implements Serializable {
+    @Column(name = "id_chofer")
+    private Long choferId;
+    @Column(name = "nombre")
     private String nombre;
+    @Column(name = "apellido")
     private String apellido;
 
     public Chofer() {
     }
 
-    public Chofer(Long id, String nombre, String apellido) {
-        this.id = id;
+    public Chofer(Long choferId, String nombre, String apellido) {
+        this.choferId = choferId;
         this.nombre = nombre;
         this.apellido = apellido;
     }
 
-    public Long getId() {
-        return id;
+    public Long getChoferId() {
+        return choferId;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setChoferId(Long choferId) {
+        this.choferId = choferId;
     }
 
     public String getNombre() {
@@ -38,5 +46,14 @@ public class Chofer implements Serializable {
 
     public void setApellido(String apellido) {
         this.apellido = apellido;
+    }
+
+    @Override
+    public String toString() {
+        return "Chofer{" +
+                "choferId=" + choferId +
+                ", nombre='" + nombre + '\'' +
+                ", apellido='" + apellido + '\'' +
+                '}';
     }
 }

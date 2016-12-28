@@ -1,7 +1,6 @@
 package com.designfreed.apppedidos.adapters;
 
 import android.content.Context;
-import android.graphics.drawable.GradientDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,7 +33,7 @@ public class PedidoItemAdapter extends ArrayAdapter<ItemPedido> {
         articulo.setText(item.getProducto().getProducto());
 
         TextView cantidad = (TextView) listItemView.findViewById(R.id.cantidad);
-        cantidad.setText(item.getCantidad());
+        cantidad.setText(item.getCantidad().toString());
 
         TextView precio = (TextView) listItemView.findViewById(R.id.precio);
         precio.setText(formatSaldo(item.getPrecio()));
