@@ -90,7 +90,7 @@ public class LoginActivity extends AppCompatActivity {
                     InputStream inputStream = httpURLConnection.getInputStream();
                     json = Utils.readFromStream(inputStream);
 
-                    chofer = LoginService.getChofer(json);
+                    chofer = LoginService.jsonToChofer(json);
                 }
             } catch (MalformedURLException e) {
                 e.printStackTrace();

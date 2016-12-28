@@ -1,23 +1,41 @@
 package com.designfreed.apppedidos.entities;
 
-public class Producto {
-    private Long id;
+import com.activeandroid.Model;
+import com.activeandroid.annotation.Column;
+import com.activeandroid.annotation.Table;
+
+@Table(name = "productos")
+public class Producto extends Model{
+    @Column(name = "id_producto")
+    private Long productoId;
+    @Column(name = "codigo_producto")
+    private Long productoCodigo;
+    @Column(name = "producto")
     private String producto;
 
     public Producto() {
     }
 
-    public Producto(Long id, String producto) {
-        this.id = id;
+    public Producto(Long productoId, Long productoCodigo, String producto) {
+        this.productoId = productoId;
+        this.productoCodigo = productoCodigo;
         this.producto = producto;
     }
 
-    public Long getId() {
-        return id;
+    public Long getProductoId() {
+        return productoId;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setProductoId(Long productoId) {
+        this.productoId = productoId;
+    }
+
+    public Long getProductoCodigo() {
+        return productoCodigo;
+    }
+
+    public void setProductoCodigo(Long productoCodigo) {
+        this.productoCodigo = productoCodigo;
     }
 
     public String getProducto() {

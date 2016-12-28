@@ -1,29 +1,38 @@
 package com.designfreed.apppedidos.entities;
 
+import com.activeandroid.annotation.Column;
+import com.activeandroid.annotation.Table;
+
+@Table(name = "clientes")
 public class Cliente {
-    private Long id;
+    @Column(name = "id_cliente")
+    private Long clienteId;
+    @Column(name = "razon_social")
     private String razonSocial;
+    @Column(name = "calle")
     private String calle;
+    @Column(name = "altura")
     private String altura;
+    @Column(name = "condicion_venta")
     private CondicionVenta condicionVenta;
 
     public Cliente() {
     }
 
-    public Cliente(Long id, String razonSocial, String calle, String altura, CondicionVenta condicionVenta) {
-        this.id = id;
+    public Cliente(Long clienteId, String razonSocial, String calle, String altura, CondicionVenta condicionVenta) {
+        this.clienteId = clienteId;
         this.razonSocial = razonSocial;
         this.calle = calle;
         this.altura = altura;
         this.condicionVenta = condicionVenta;
     }
 
-    public Long getId() {
-        return id;
+    public Long getClienteId() {
+        return clienteId;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setClienteId(Long clienteId) {
+        this.clienteId = clienteId;
     }
 
     public String getRazonSocial() {

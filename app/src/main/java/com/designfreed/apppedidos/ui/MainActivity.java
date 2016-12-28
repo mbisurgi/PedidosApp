@@ -1,7 +1,6 @@
 package com.designfreed.apppedidos.ui;
 
 import android.content.Intent;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -10,11 +9,8 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.designfreed.apppedidos.R;
-import com.designfreed.apppedidos.bd.CrmDbHelper;
-import com.designfreed.apppedidos.bd.HojaRutaRepositoryDb;
 import com.designfreed.apppedidos.entities.Chofer;
 import com.designfreed.apppedidos.entities.HojaRuta;
-import com.designfreed.apppedidos.repositories.HojaRutaRepository;
 import com.designfreed.apppedidos.services.PedidoService;
 import com.designfreed.apppedidos.utils.Utils;
 
@@ -23,13 +19,12 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.text.ParseException;
 
 public class MainActivity extends AppCompatActivity {
     private TextView txtChofer;
     private ImageButton btnVoleos;
 
-    private CrmDbHelper dbHelper;
-    private SQLiteDatabase db;
     private Chofer chofer;
     private HojaRuta hoja;
 
@@ -37,9 +32,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        //dbHelper = CrmDbHelper.getInstance(this);
-        //db = dbHelper.getReadableDatabase();
 
         chofer = (Chofer) getIntent().getSerializableExtra("chofer");
 
@@ -74,13 +66,11 @@ public class MainActivity extends AppCompatActivity {
             urlService.append("&");
             urlService.append("choferId=" + choferes[0].getChoferId());
 
-            HojaRutaRepository hojaRutaRepository = new HojaRutaRepository();
-
-            //HojaRutaRepositoryDb hojaRutaRepositoryDb = new HojaRutaRepositoryDb(getApplicationContext());
-
-            //hoja = hojaRutaRepositoryDb.getHojaRuta(fechaString, chofer.getId());
-            //hoja = hojaRutaRepository.getByIdCrm(1L);
-            //hoja = HojaRuta.findById(HojaRuta.class, 1L);
+            try {
+                hoja = PedidoService.getHojaRutaByFechaAndChofer(Utils.stringToDate(fechaString), chofer.getChoferId());
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
 
             if (hoja != null) {
                 return false;
@@ -89,8 +79,6 @@ public class MainActivity extends AppCompatActivity {
             String json = "";
 
             HttpURLConnection httpURLConnection = null;
-
-            //HojasRuta hoja = null;
 
             try {
                 URL url = new URL(urlService.toString());
@@ -103,11 +91,10 @@ public class MainActivity extends AppCompatActivity {
                     InputStream inputStream = httpURLConnection.getInputStream();
                     json = Utils.readFromStream(inputStream);
 
-                    hoja = PedidoService.getHojaRuta(json);
+                    hoja = PedidoService.jsonToHojaRuta(json);
 
                     if (hoja != null) {
-                        //hojaRutaRepositoryDb.insertHojaRuta(hoja);
-                        Long i = hoja.save();
+                        PedidoService.insertHojaRuta(hoja);
 
                         estado = true;
                     }

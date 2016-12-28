@@ -12,7 +12,7 @@ import java.util.Calendar;
 import java.util.Date;
 
 public class PedidoService {
-    HojaRutaRepository hojaRutaRepository = new HojaRutaRepository();
+    private static HojaRutaRepository hojaRutaRepository = new HojaRutaRepository();
 
     public static HojaRuta jsonToHojaRuta(String json) {
         HojaRuta hoja = new HojaRuta();
@@ -36,5 +36,13 @@ public class PedidoService {
         }
 
         return hoja;
+    }
+
+    public static HojaRuta getHojaRutaByFechaAndChofer(Date fecha, Long id) {
+        return hojaRutaRepository.getByFechaAndChofer(fecha, id);
+    }
+
+    public static Long insertHojaRuta(HojaRuta hoja) {
+        return hojaRutaRepository.saveOrUpdate(hoja);
     }
 }

@@ -1,27 +1,35 @@
 package com.designfreed.apppedidos.entities;
 
+import com.activeandroid.annotation.Column;
+import com.activeandroid.annotation.Table;
+
+@Table(name = "items_pedido")
 public class ItemPedido {
-    private Long id;
+    @Column(name = "id_item_pedido")
+    private Long itemPedidoId;
+    @Column(name = "producto")
     private Producto producto;
+    @Column(name = "cantidad")
     private Integer cantidad;
+    @Column(name = "precio")
     private Double precio;
 
     public ItemPedido() {
     }
 
-    public ItemPedido(Long id, Producto producto, Integer cantidad, Double precio) {
-        this.id = id;
+    public ItemPedido(Long itemPedidoId, Producto producto, Integer cantidad, Double precio) {
+        this.itemPedidoId = itemPedidoId;
         this.producto = producto;
         this.cantidad = cantidad;
         this.precio = precio;
     }
 
-    public Long getId() {
-        return id;
+    public Long getItemPedidoId() {
+        return itemPedidoId;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setItemPedidoId(Long itemPedidoId) {
+        this.itemPedidoId = itemPedidoId;
     }
 
     public Producto getProducto() {
