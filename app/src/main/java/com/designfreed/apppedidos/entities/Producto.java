@@ -9,14 +9,14 @@ public class Producto extends Model{
     @Column(name = "id_producto")
     private Long productoId;
     @Column(name = "codigo_producto")
-    private Long productoCodigo;
+    private Integer productoCodigo;
     @Column(name = "producto")
     private String producto;
 
     public Producto() {
     }
 
-    public Producto(Long productoId, Long productoCodigo, String producto) {
+    public Producto(Long productoId, Integer productoCodigo, String producto) {
         this.productoId = productoId;
         this.productoCodigo = productoCodigo;
         this.producto = producto;
@@ -30,11 +30,11 @@ public class Producto extends Model{
         this.productoId = productoId;
     }
 
-    public Long getProductoCodigo() {
+    public Integer getProductoCodigo() {
         return productoCodigo;
     }
 
-    public void setProductoCodigo(Long productoCodigo) {
+    public void setProductoCodigo(Integer productoCodigo) {
         this.productoCodigo = productoCodigo;
     }
 

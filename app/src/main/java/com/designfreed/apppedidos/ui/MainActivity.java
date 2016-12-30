@@ -11,7 +11,9 @@ import android.widget.TextView;
 import com.designfreed.apppedidos.R;
 import com.designfreed.apppedidos.entities.Chofer;
 import com.designfreed.apppedidos.entities.HojaRuta;
+import com.designfreed.apppedidos.entities.Producto;
 import com.designfreed.apppedidos.services.PedidoService;
+import com.designfreed.apppedidos.services.ProductoService;
 import com.designfreed.apppedidos.utils.Utils;
 
 import java.io.IOException;
@@ -20,6 +22,7 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.ParseException;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     private TextView txtChofer;
@@ -49,10 +52,57 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        new DownloadHojaRutaTask().execute(chofer);
+        new DownloadInfoTask().execute(chofer);
     }
 
-    private class DownloadHojaRutaTask extends AsyncTask<Chofer, Void, Boolean> {
+    private class DownloadProductosTask extends AsyncTask<String, Void, Boolean> {
+        @Override
+        protected Boolean doInBackground(String... strings) {
+            Boolean estado = false;
+
+            String urlService = "http://192.168.0.3:8080/PedidosAPI/services/pedidosService/getProductos";
+
+            String json = "";
+
+            HttpURLConnection httpURLConnection = null;
+
+            try {
+                URL url = new URL(urlService.toString());
+
+                httpURLConnection = (HttpURLConnection) url.openConnection();
+                httpURLConnection.setRequestMethod("GET");
+                httpURLConnection.connect();
+
+                if (httpURLConnection.getResponseCode() == 200) {
+                    InputStream inputStream = httpURLConnection.getInputStream();
+                    json = Utils.readFromStream(inputStream);
+
+                    List<Producto> productos = ProductoService.jsonToProductos(json);
+
+                    ProductoService.insertProductos(productos);
+
+                    estado = true;
+                }
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } finally {
+                if (httpURLConnection != null) {
+                    httpURLConnection.disconnect();
+                }
+            }
+
+            return estado;
+        }
+
+        @Override
+        protected void onPostExecute(Boolean aBoolean) {
+            super.onPostExecute(aBoolean);
+        }
+    }
+
+    private class DownloadInfoTask extends AsyncTask<Chofer, Void, Boolean> {
         @Override
         protected Boolean doInBackground(Chofer... choferes) {
             Boolean estado = false;
