@@ -7,12 +7,15 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.designfreed.apppedidos.R;
 import com.designfreed.apppedidos.entities.Chofer;
 import com.designfreed.apppedidos.entities.HojaRuta;
 import com.designfreed.apppedidos.entities.Producto;
-import com.designfreed.apppedidos.services.PedidoService;
+import com.designfreed.apppedidos.rest.adapters.HojaRutaApiAdapter;
+import com.designfreed.apppedidos.rest.adapters.ProductoApiAdapter;
+import com.designfreed.apppedidos.services.HojaRutaService;
 import com.designfreed.apppedidos.services.ProductoService;
 import com.designfreed.apppedidos.utils.Utils;
 
@@ -24,12 +27,19 @@ import java.net.URL;
 import java.text.ParseException;
 import java.util.List;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 public class MainActivity extends AppCompatActivity {
     private TextView txtChofer;
     private ImageButton btnVoleos;
 
     private Chofer chofer;
     private HojaRuta hoja;
+
+    private ProductoApiAdapter productoApiAdapter;
+    private HojaRutaApiAdapter hojaRutaApiAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,7 +62,11 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        new DownloadInfoTask().execute(chofer);
+        loadProductos();
+        loadHojaRuta("19/12/2016", chofer.getChoferId());
+
+        //new DownloadProductosTask().execute();
+        //new DownloadInfoTask().execute(chofer);
     }
 
     private class DownloadProductosTask extends AsyncTask<String, Void, Boolean> {
@@ -117,7 +131,7 @@ public class MainActivity extends AppCompatActivity {
             urlService.append("choferId=" + choferes[0].getChoferId());
 
             try {
-                hoja = PedidoService.getHojaRutaByFechaAndChofer(Utils.stringToDate(fechaString), chofer.getChoferId());
+                hoja = HojaRutaService.getHojaRutaByFechaAndChofer(Utils.stringToDate(fechaString), chofer.getChoferId());
             } catch (ParseException e) {
                 e.printStackTrace();
             }
@@ -141,10 +155,10 @@ public class MainActivity extends AppCompatActivity {
                     InputStream inputStream = httpURLConnection.getInputStream();
                     json = Utils.readFromStream(inputStream);
 
-                    hoja = PedidoService.jsonToHojaRuta(json);
+                    hoja = HojaRutaService.jsonToHojaRuta(json);
 
                     if (hoja != null) {
-                        PedidoService.insertHojaRuta(hoja);
+                        HojaRutaService.insertHojaRuta(hoja);
 
                         estado = true;
                     }
@@ -166,5 +180,51 @@ public class MainActivity extends AppCompatActivity {
         protected void onPostExecute(Boolean aBoolean) {
             super.onPostExecute(aBoolean);
         }
+    }
+
+    private void loadProductos() {
+        Call<List<Producto>> call = productoApiAdapter.getAll();
+        call.enqueue(new Callback<List<Producto>>() {
+            @Override
+            public void onResponse(Call<List<Producto>> call, Response<List<Producto>> response) {
+                List<Producto> productos = response.body();
+
+                if (productos != null) {
+                    ProductoService.insertProductos(productos);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Producto>> call, Throwable t) {
+                Toast.makeText(getApplicationContext(), t.getMessage(), Toast.LENGTH_LONG);
+            }
+        });
+    }
+
+    private void loadHojaRuta(String fecha, Long choferId) {
+        try {
+            hoja = HojaRutaService.getHojaRutaByFechaAndChofer(Utils.stringToDate(fecha), chofer.getChoferId());
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        if (hoja != null) {
+            return;
+        }
+
+        Call<HojaRuta> call = hojaRutaApiAdapter.getByFechaChofer(fecha, choferId);
+        call.enqueue(new Callback<HojaRuta>() {
+            @Override
+            public void onResponse(Call<HojaRuta> call, Response<HojaRuta> response) {
+                hoja = response.body();
+
+                HojaRutaService.insertHojaRuta(hoja);
+            }
+
+            @Override
+            public void onFailure(Call<HojaRuta> call, Throwable t) {
+
+            }
+        });
     }
 }

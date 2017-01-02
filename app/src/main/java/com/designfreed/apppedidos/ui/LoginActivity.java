@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -13,23 +12,21 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import com.activeandroid.ActiveAndroid;
 import com.designfreed.apppedidos.R;
 import com.designfreed.apppedidos.entities.Chofer;
-import com.designfreed.apppedidos.services.LoginService;
-import com.designfreed.apppedidos.utils.Utils;
+import com.designfreed.apppedidos.rest.adapters.LoginApiAdapter;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class LoginActivity extends AppCompatActivity {
     private EditText txtUsername;
     private EditText txtPassword;
     private Button btnLogin;
     private ProgressBar pbProgress;
+
+    private LoginApiAdapter loginApiAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +40,9 @@ public class LoginActivity extends AppCompatActivity {
 
         pbProgress.setVisibility(View.GONE);
 
+        loginApiAdapter = new LoginApiAdapter();
+
+
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -50,9 +50,7 @@ public class LoginActivity extends AppCompatActivity {
                 NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
 
                 if (networkInfo != null && networkInfo.isConnected()) {
-                    new UserLoginTask().execute(txtUsername.getText().toString(), txtPassword.getText().toString());
-
-                    pbProgress.setVisibility(View.VISIBLE);
+                    login();
                 } else {
                     pbProgress.setVisibility(View.GONE);
                     Toast.makeText(getApplicationContext(), "No hay conexion a internet", Toast.LENGTH_LONG);
@@ -61,62 +59,29 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
-    private class UserLoginTask extends AsyncTask<String, Void, Chofer> {
-        @Override
-        protected Chofer doInBackground(String... strings) {
-            String username = strings[0];
-            String password = strings[1];
+    private void login() {
+        Call<Chofer> call = loginApiAdapter.login(txtUsername.getText().toString(), txtPassword.getText().toString());
+        call.enqueue(new Callback<Chofer>() {
+            @Override
+            public void onResponse(Call<Chofer> call, Response<Chofer> response) {
+                Chofer chofer = response.body();
 
-            StringBuilder urlService = new StringBuilder("http://192.168.0.3:8080/PedidosAPI/services/pedidosService/login?");
+                if (chofer != null) {
+                    Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                    intent.putExtra("chofer", chofer);
 
-            urlService.append("username=" + username);
-            urlService.append("&");
-            urlService.append("password=" + password);
-
-            String json = "";
-
-            HttpURLConnection httpURLConnection = null;
-
-            Chofer chofer = null;
-
-            try {
-                URL url = new URL(urlService.toString());
-
-                httpURLConnection = (HttpURLConnection) url.openConnection();
-                httpURLConnection.setRequestMethod("GET");
-                httpURLConnection.connect();
-
-                if (httpURLConnection.getResponseCode() == 200) {
-                    InputStream inputStream = httpURLConnection.getInputStream();
-                    json = Utils.readFromStream(inputStream);
-
-                    chofer = LoginService.jsonToChofer(json);
+                    startActivity(intent);
                 }
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            } finally {
-                if (httpURLConnection != null) {
-                    httpURLConnection.disconnect();
-                }
+
+                pbProgress.setVisibility(View.GONE);
             }
 
-            return chofer;
-        }
-
-        @Override
-        protected void onPostExecute(Chofer chofer) {
-            super.onPostExecute(chofer);
-
-            if (chofer != null) {
-                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                intent.putExtra("chofer", chofer);
-
-                startActivity(intent);
+            @Override
+            public void onFailure(Call<Chofer> call, Throwable t) {
+                Toast.makeText(getApplicationContext(), t.getMessage(), Toast.LENGTH_LONG);
             }
+        });
 
-            pbProgress.setVisibility(View.GONE);
-        }
+        pbProgress.setVisibility(View.VISIBLE);
     }
 }

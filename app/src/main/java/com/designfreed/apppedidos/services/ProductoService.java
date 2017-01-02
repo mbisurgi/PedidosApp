@@ -39,9 +39,15 @@ public class ProductoService {
         return productos;
     }
 
+    public static List<Producto> getAll() {
+        return productoRepository.getAll();
+    }
+
     public static void insertProductos(List<Producto> productos) {
         for (Producto pro: productos) {
-            pro.save();
+            if (productoRepository.getByCodigo(pro.getProductoCodigo()) == null) {
+                pro.save();
+            }
         }
     }
 }

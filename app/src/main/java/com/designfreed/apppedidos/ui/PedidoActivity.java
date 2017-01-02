@@ -45,7 +45,7 @@ public class PedidoActivity extends AppCompatActivity {
             public void onClick(View view) {
                 ItemPedido itemPedido = new ItemPedido();
 
-                Producto pro = new Producto(1L, "Garrafa 10kg");
+                Producto pro = new Producto(1L, 1001, "Garrafa 10kg");
 
                 Integer cantidad = Integer.valueOf(txtCantidad.getText().toString());
                 Double precio = Double.valueOf(txtPrecio.getText().toString());

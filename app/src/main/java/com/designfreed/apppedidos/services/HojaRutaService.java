@@ -11,7 +11,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
-public class PedidoService {
+public class HojaRutaService {
     private static HojaRutaRepository hojaRutaRepository = new HojaRutaRepository();
 
     public static HojaRuta jsonToHojaRuta(String json) {
