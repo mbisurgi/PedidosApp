@@ -13,18 +13,18 @@ public class Cliente {
     private String calle;
     @Column(name = "altura")
     private String altura;
-    @Column(name = "condicion_venta")
-    private CondicionVenta condicionVenta;
+    @Column(name = "id_condicion_venta")
+    private Long condicionVentaId;
 
     public Cliente() {
     }
 
-    public Cliente(Long clienteId, String razonSocial, String calle, String altura, CondicionVenta condicionVenta) {
+    public Cliente(Long clienteId, String razonSocial, String calle, String altura, Long condicionVentaId) {
         this.clienteId = clienteId;
         this.razonSocial = razonSocial;
         this.calle = calle;
         this.altura = altura;
-        this.condicionVenta = condicionVenta;
+        this.condicionVentaId = condicionVentaId;
     }
 
     public Long getClienteId() {
@@ -59,11 +59,11 @@ public class Cliente {
         this.altura = altura;
     }
 
-    public CondicionVenta getCondicionVenta() {
-        return condicionVenta;
+    public Long getCondicionVentaId() {
+        return condicionVentaId;
     }
 
-    public void setCondicionVenta(CondicionVenta condicionVenta) {
-        this.condicionVenta = condicionVenta;
+    public void setCondicionVentaId(Long condicionVentaId) {
+        this.condicionVentaId = condicionVentaId;
     }
 }

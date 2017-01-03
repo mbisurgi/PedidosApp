@@ -8,6 +8,6 @@ import retrofit2.Call;
 import retrofit2.http.GET;
 
 public interface ProductoApi {
-    @GET("PedidosAPI/services/pedidosService/getProductos")
+    @GET("/PedidosAPI/services/pedidosService/getProductos")
     Call<List<Producto>> getAll();
 }

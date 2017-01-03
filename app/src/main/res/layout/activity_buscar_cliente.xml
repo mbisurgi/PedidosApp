@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_buscar_cliente"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:orientation="vertical"
+    tools:context="com.designfreed.apppedidos.ui.BuscarClienteActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            style="@style/BuscarClienteLabel"
+            android:text="Codigo"/>
+
+        <EditText
+            android:id="@+id/codigo"
+            style="@style/BuscarClienteText"
+            tools:text="100001"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            style="@style/BuscarClienteLabel"
+            android:text="Razon Social"/>
+
+        <EditText
+            android:id="@+id/razon_social"
+            style="@style/BuscarClienteText"
+            tools:text="Maximiliano Bisurgi"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            style="@style/BuscarClienteLabel"
+            android:text="Calle"/>
+
+        <EditText
+            android:id="@+id/calle"
+            style="@style/BuscarClienteText"
+            tools:text="Esmeralda"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            style="@style/BuscarClienteLabel"
+            android:text="Altura"/>
+
+        <EditText
+            android:id="@+id/altura"
+            style="@style/BuscarClienteText"
+            tools:text="155"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            style="@style/BuscarClienteLabel"
+            android:text="Telefono"/>
+
+        <EditText
+            android:id="@+id/telefono"
+            style="@style/BuscarClienteText"
+            tools:text="42959090"/>
+    </LinearLayout>
+
+    <ImageButton
+        android:id="@+id/buscar"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_gravity="center_horizontal"
+        android:scaleType="centerInside"
+        android:src="@drawable/buscar"/>
+</LinearLayout>

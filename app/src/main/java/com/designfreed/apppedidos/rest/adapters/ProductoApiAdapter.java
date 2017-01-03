@@ -14,7 +14,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class ProductoApiAdapter {
     private Retrofit restAdapter;
     private ProductoApi api;
-    private static final String LOGIN_URL = "http://192.168.0.3:8080";
+    private static final String LOGIN_URL = "http://192.168.0.10:8080";
 
     public ProductoApiAdapter() {
         restAdapter = new Retrofit.Builder()

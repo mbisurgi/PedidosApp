@@ -20,4 +20,15 @@
         <item name="android:background">#043d5d</item>
     </style>
 
+    <style name="BuscarClienteLabel">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_weight">1</item>
+    </style>
+
+    <style name="BuscarClienteText">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_weight">2</item>
+    </style>
 </resources>

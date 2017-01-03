@@ -1,21 +1,22 @@
 package com.designfreed.apppedidos.rest.adapters;
 
-import com.designfreed.apppedidos.entities.Chofer;
-import com.designfreed.apppedidos.rest.services.LoginApi;
+import com.designfreed.apppedidos.entities.Cliente;
+import com.designfreed.apppedidos.rest.services.ClienteApi;
 import com.google.gson.GsonBuilder;
 
 import java.lang.reflect.Modifier;
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class LoginApiAdapter {
+public class ClienteApiAdapter {
     private Retrofit restAdapter;
-    private LoginApi api;
+    private ClienteApi api;
     private static final String LOGIN_URL = "http://192.168.0.10:8080";
 
-    public LoginApiAdapter() {
+    public ClienteApiAdapter() {
         restAdapter = new Retrofit.Builder()
                 .baseUrl(LOGIN_URL)
                 .addConverterFactory(GsonConverterFactory.create(new GsonBuilder()
@@ -24,10 +25,22 @@ public class LoginApiAdapter {
                         .create()))
                 .build();
 
-        api = restAdapter.create(LoginApi.class);
+        api = restAdapter.create(ClienteApi.class);
     }
 
-    public Call<Chofer> login(String username, String password) {
-        return api.login(username, password);
+    public Call<Cliente> getById(Long id) {
+        return api.getById(id);
+    }
+
+    public Call<Cliente> getByRazonSocial(String razonSocial) {
+        return api.getByRazonSocial(razonSocial);
+    }
+
+    public Call<Cliente> getByTelefono(String telefono) {
+        return api.getByTelefono(telefono);
+    }
+
+    public Call<List<Cliente>> getAllByAltura(String altura) {
+        return api.getAllByAltura(altura);
     }
 }

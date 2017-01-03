@@ -59,4 +59,14 @@ public class HojaRuta extends Model implements Serializable {
     public void setEstado(Boolean estado) {
         this.estado = estado;
     }
+
+    @Override
+    public String toString() {
+        return "HojaRuta{" +
+                "hojaRutaId=" + hojaRutaId +
+                ", fecha=" + fecha +
+                ", choferId=" + choferId +
+                ", estado=" + estado +
+                '}';
+    }
 }

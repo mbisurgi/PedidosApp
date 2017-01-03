@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -34,6 +35,7 @@ import retrofit2.Response;
 public class MainActivity extends AppCompatActivity {
     private TextView txtChofer;
     private ImageButton btnVoleos;
+    private ImageButton btnBuscar;
 
     private Chofer chofer;
     private HojaRuta hoja;
@@ -62,124 +64,21 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        btnBuscar = (ImageButton) findViewById(R.id.buscar);
+        btnBuscar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getApplicationContext(), BuscarClienteActivity.class);
+
+                startActivity(intent);
+            }
+        });
+
+        productoApiAdapter = new ProductoApiAdapter();
+        hojaRutaApiAdapter = new HojaRutaApiAdapter();
+
         loadProductos();
         loadHojaRuta("19/12/2016", chofer.getChoferId());
-
-        //new DownloadProductosTask().execute();
-        //new DownloadInfoTask().execute(chofer);
-    }
-
-    private class DownloadProductosTask extends AsyncTask<String, Void, Boolean> {
-        @Override
-        protected Boolean doInBackground(String... strings) {
-            Boolean estado = false;
-
-            String urlService = "http://192.168.0.3:8080/PedidosAPI/services/pedidosService/getProductos";
-
-            String json = "";
-
-            HttpURLConnection httpURLConnection = null;
-
-            try {
-                URL url = new URL(urlService.toString());
-
-                httpURLConnection = (HttpURLConnection) url.openConnection();
-                httpURLConnection.setRequestMethod("GET");
-                httpURLConnection.connect();
-
-                if (httpURLConnection.getResponseCode() == 200) {
-                    InputStream inputStream = httpURLConnection.getInputStream();
-                    json = Utils.readFromStream(inputStream);
-
-                    List<Producto> productos = ProductoService.jsonToProductos(json);
-
-                    ProductoService.insertProductos(productos);
-
-                    estado = true;
-                }
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            } finally {
-                if (httpURLConnection != null) {
-                    httpURLConnection.disconnect();
-                }
-            }
-
-            return estado;
-        }
-
-        @Override
-        protected void onPostExecute(Boolean aBoolean) {
-            super.onPostExecute(aBoolean);
-        }
-    }
-
-    private class DownloadInfoTask extends AsyncTask<Chofer, Void, Boolean> {
-        @Override
-        protected Boolean doInBackground(Chofer... choferes) {
-            Boolean estado = false;
-
-            StringBuilder urlService = new StringBuilder("http://192.168.0.3:8080/PedidosAPI/services/pedidosService/getHojaRuta?");
-
-            String fechaString = "19/12/2016";
-            //Date fecha = Calendar.getInstance().getTime();
-
-            urlService.append("fecha=" + fechaString);
-            urlService.append("&");
-            urlService.append("choferId=" + choferes[0].getChoferId());
-
-            try {
-                hoja = HojaRutaService.getHojaRutaByFechaAndChofer(Utils.stringToDate(fechaString), chofer.getChoferId());
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
-
-            if (hoja != null) {
-                return false;
-            }
-
-            String json = "";
-
-            HttpURLConnection httpURLConnection = null;
-
-            try {
-                URL url = new URL(urlService.toString());
-
-                httpURLConnection = (HttpURLConnection) url.openConnection();
-                httpURLConnection.setRequestMethod("GET");
-                httpURLConnection.connect();
-
-                if (httpURLConnection.getResponseCode() == 200) {
-                    InputStream inputStream = httpURLConnection.getInputStream();
-                    json = Utils.readFromStream(inputStream);
-
-                    hoja = HojaRutaService.jsonToHojaRuta(json);
-
-                    if (hoja != null) {
-                        HojaRutaService.insertHojaRuta(hoja);
-
-                        estado = true;
-                    }
-                }
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            } finally {
-                if (httpURLConnection != null) {
-                    httpURLConnection.disconnect();
-                }
-            }
-
-            return estado;
-        }
-
-        @Override
-        protected void onPostExecute(Boolean aBoolean) {
-            super.onPostExecute(aBoolean);
-        }
     }
 
     private void loadProductos() {
@@ -187,6 +86,9 @@ public class MainActivity extends AppCompatActivity {
         call.enqueue(new Callback<List<Producto>>() {
             @Override
             public void onResponse(Call<List<Producto>> call, Response<List<Producto>> response) {
+                Log.i("INFO", "METHOD -- loadProductos() -- DETAIL -- Callback<List<Producto>>");
+                Log.i("INFO", "METHOD -- loadProducto() -- DETAIL -- Response message: " + response.raw());
+
                 List<Producto> productos = response.body();
 
                 if (productos != null) {
@@ -209,6 +111,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         if (hoja != null) {
+            Log.i("INFO", "METHOD -- loadHojaRuta() -- DETAIL -- Hoja Ruta: " + hoja);
             return;
         }
 
@@ -216,6 +119,9 @@ public class MainActivity extends AppCompatActivity {
         call.enqueue(new Callback<HojaRuta>() {
             @Override
             public void onResponse(Call<HojaRuta> call, Response<HojaRuta> response) {
+                Log.i("INFO", "METHOD -- loadHojaRuta() -- DETAIL -- Callback<HojaRuta>");
+                Log.i("INFO", "METHOD -- loadHojaRuta() -- DETAIL -- Response message: " + response.raw());
+
                 hoja = response.body();
 
                 HojaRutaService.insertHojaRuta(hoja);
@@ -223,7 +129,10 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<HojaRuta> call, Throwable t) {
+                Log.i("INFO", "METHOD -- loadHojaRuta() -- DETAIL -- Callback<HojaRuta>");
+                Log.i("INFO", "METHOD -- loadHojaRuta() -- DETAIL -- Exception: " + t.toString());
 
+                Toast.makeText(getApplicationContext(), t.getMessage(), Toast.LENGTH_LONG);
             }
         });
     }

@@ -7,6 +7,6 @@ import retrofit2.http.GET;
 import retrofit2.http.Query;
 
 public interface HojaRutaApi {
-    @GET("PedidosAPI/services/pedidosService/getHojaRuta")
+    @GET("/PedidosAPI/services/pedidosService/getHojaRuta")
     Call<HojaRuta> getByFechaChofer(@Query("fecha") String fecha, @Query("choferId") Long id);
 }
